@@ -111,6 +111,12 @@
         owner: "{{ lookup('env', 'USER') }}"
         force: yes
 
+    - name: Setup git
+      shell: |
+        git config --global user.name "Christopher Dengsø"
+        git config --global user.email "chrdengso@gmail.com"
+        git config --global init.defaultBranch main
+
     - name: Create a default VSCode configuration
       template:
         src: templates/vscode-settings.json.j2
