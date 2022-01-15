@@ -22,6 +22,7 @@
           homebrew/cask-versions,
           thoughtbot/formulae,
           weaveworks/tap,
+          mongodb/brew
         ]
 
     - name: Install core packages via brew casks
@@ -37,7 +38,7 @@
         - ngrok
         - visual-studio-code
         - iina
-´
+
     - name: "Install homebrew packages"
       community.general.homebrew:
         name: [
@@ -69,8 +70,9 @@
           'yarn',
           'zlib',
           'zsh',
-          'mongo',
-          'mysql'
+          'mongodb-community',
+          'mysql',
+          'asdf'
         ]
         state: present
         update_homebrew: yes
@@ -78,8 +80,9 @@
     - name: "Install from Mac app store"
       shell: mas install {{ item }}
       with_items:
-        - 497799835 # xcode
+        # - 497799835 # xcode
         - 1278508951 # trello
+        - 1176895641 # spark
 
     - name: Get the path to ZSH
       become: false
@@ -115,13 +118,6 @@
         owner: "{{ lookup('env', 'USER') }}"
         force: yes
 
-    - name: Create a default VSCode keuybinding configuration
-      template:
-        src: templates/vscode-keybindings.json.j2
-        dest: /Users/{{ lookup('env', 'USER') }}/Library/Application Support/Code/User/keybindings.json
-        owner: "{{ lookup('env', 'USER') }}"
-        force: yes
-
     # Add something which ensures path is set here
     - name: Install VSCode extensions
       shell: code --install-extension {{ item }}
@@ -129,11 +125,6 @@
         - bradlc.vscode-tailwindcss
         - mhutchie.git-graph
         - eamodio.gitlens
-
-    - git:
-        repo: https://github.com/asdf-vm/asdf.git
-        dest: "/Users/{{ lookup('env', 'USER') }}/.asdf"
-        version: v0.8.1
 
     - name: "Create a default asdf configuration"
       template:
