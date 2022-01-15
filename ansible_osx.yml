@@ -29,48 +29,28 @@
         name: "{{ item }}"
       ignore_errors: yes
       with_items:
-        - 1password
-        - android-sdk
-        - android-studio
-        - datagrip
         - docker
-        - dropbox
         - figma
         - google-chrome
-        - google-cloud-sdk
-        - iterm2
-        - kindle
+        - firefox
+        - hyper
         - ngrok
-        - slack
-        - sublime-text
-        - telegram
         - visual-studio-code
-        - vlc
-        - zoom
-        - tuple
-
+        - iina
+´
     - name: "Install homebrew packages"
       community.general.homebrew:
         name: [
           'autoconf',
           'automake',
-          'aws-iam-authenticator',
-          'awscli',
           'bfg',
           'coreutils',
           'curl',
-          'dbt@0.18.0',
           'direnv',
           'dnsmasq',
-          'fzf',
           'gnu-time',
           'gpg',
-          'heroku',
           'htop',
-          'imagemagick@6',
-          'kubectx',
-          'kubernetes-cli',
-          'kubernetes-helm',
           'libtool',
           'libxslt',
           'libyaml',
@@ -82,8 +62,6 @@
           'readline',
           'redis',
           'sqlite3',
-          'tmux',
-          'unixodbc',
           'unzip',
           'vim',
           'watchman',
@@ -91,6 +69,8 @@
           'yarn',
           'zlib',
           'zsh',
+          'mongo',
+          'mysql'
         ]
         state: present
         update_homebrew: yes
@@ -99,6 +79,7 @@
       shell: mas install {{ item }}
       with_items:
         - 497799835 # xcode
+        - 1278508951 # trello
 
     - name: Get the path to ZSH
       become: false
@@ -145,26 +126,9 @@
     - name: Install VSCode extensions
       shell: code --install-extension {{ item }}
       with_items:
-        - apollographql.vscode-apollo
         - bradlc.vscode-tailwindcss
-        - castwide.solargraph
-        - clinyong.vscode-css-modules
+        - mhutchie.git-graph
         - eamodio.gitlens
-        - jakebecker.elixir-ls
-        - kaiwood.endwise
-        - karunamurti.haml
-        - ms-vscode-remote.vscode-remote-extensionpack
-        - ms-vscode.vscode-typescript-tslint-plugin
-        - msjsdiag.debugger-for-chrome
-        - rebornix.ruby
-        - richie5um2.vscode-sort-json
-        - Tyriar.sort-lines
-        - vscodevim.vim
-        - wholroyd.jinja
-        - wingrunr21.vscode-ruby
-        - xabikos.javascriptsnippets
-        - streetsidesoftware.code-spell-checker
-        - fabiospampinato.vscode-todo-plus
 
     - git:
         repo: https://github.com/asdf-vm/asdf.git
@@ -184,10 +148,8 @@
         asdf plugin-add {{ item }} || exit 0
       with_items:
         - ruby
-        - elixir
         - nodejs
         - python
-        - erlang
 
     - name: "Install Default Python"
       shell: |
@@ -211,31 +173,17 @@
       shell: |
         source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
         bash /Users/{{ lookup('env', 'USER') }}/.asdf/plugins/nodejs/bin/import-release-team-keyring
-        asdf install nodejs 16.4.2
-        asdf global nodejs 16.4.2
+        asdf install nodejs latest
+        asdf global nodejs latest
 
-    - name: "Install default erlang"
-      shell: |
-        source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
-        asdf install erlang 24.0.2
-        asdf global  erlang 24.0.2
-
-
-    - name: "Install default elixir"
-      shell: |
-        source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
-        asdf install elixir 1.12.3-otp-24
-        asdf global elixir 1.12.3-otp-24
-        mix local.hex --force
-
-    - name: Install yarn packages
-      shell: yarn global add {{ item }}
-      with_items:
-        - react-native-cli
-        - create-react-app
-        - apollo
-        - generator-generator
-        - yo
+    # - name: Install yarn packages
+    #   shell: yarn global add {{ item }}
+    #   with_items:
+    #     - react-native-cli
+    #     - create-react-app
+    #     - apollo
+    #     - generator-generator
+    #     - yo
         
     - name: re-generate bins now we've installed some yarn packages
       shell: asdf reshim nodejs
