@@ -80,7 +80,7 @@
     - name: "Install from Mac app store"
       shell: mas install {{ item }}
       with_items:
-        # - 497799835 # xcode
+        - 497799835 # xcode
         - 1278508951 # trello
         - 1176895641 # spark
 
