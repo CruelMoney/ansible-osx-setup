@@ -110,6 +110,11 @@
         dest: /Users/{{ lookup('env', 'USER') }}/.zshrc
         owner: "{{ lookup('env', 'USER') }}"
         force: yes
+    
+    # - name: "Add ZSH plugins"
+    #   shell: | 
+    #     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+    #     git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
     - name: Setup git
       shell: |
@@ -141,7 +146,7 @@
 
     - name: "Install asdf plugins"
       shell: |
-        source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
+        source ~/.zshrc
         asdf plugin-add {{ item }} || exit 0
       with_items:
         - ruby
@@ -150,7 +155,7 @@
 
     - name: "Install Default Python"
       shell: |
-        source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
+        source ~/.zshrc
         asdf install python 3.10.0
         asdf global python 3.10.0
         pip3 install ansible
@@ -158,7 +163,7 @@
 
     - name: "Install Default Ruby"
       shell: |
-        source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
+        source ~/.zshrc
         asdf install ruby 3.0.2
         asdf global ruby 3.0.2
         gem install bundler
@@ -168,7 +173,7 @@
 
     - name: "Install default node"
       shell: |
-        source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
+        source ~/.zshrc
         bash /Users/{{ lookup('env', 'USER') }}/.asdf/plugins/nodejs/bin/import-release-team-keyring
         asdf install nodejs latest
         asdf global nodejs latest
