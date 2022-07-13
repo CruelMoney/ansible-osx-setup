@@ -136,6 +136,7 @@
         - bradlc.vscode-tailwindcss
         - mhutchie.git-graph
         - eamodio.gitlens
+        - github.copilot
 
     - name: "Create a default asdf configuration"
       template:
@@ -162,14 +163,14 @@
         asdf reshim python
 
     - name: "Install Default Ruby"
+      tags: 
+        - ruby
       shell: |
         source ~/.zshrc
-        asdf install ruby 3.0.2
-        asdf global ruby 3.0.2
+        asdf install ruby latest
+        asdf global ruby latest
         gem install bundler
         gem install cocoapods
-        gem install rubocop
-        gem install solargraph
 
     - name: "Install default node"
       shell: |
