@@ -137,6 +137,7 @@
         - mhutchie.git-graph
         - eamodio.gitlens
         - github.copilot
+        - dbaeumer.vscode-eslint
 
     - name: "Create a default asdf configuration"
       template:
