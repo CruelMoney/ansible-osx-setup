@@ -138,6 +138,7 @@
         - eamodio.gitlens
         - github.copilot
         - dbaeumer.vscode-eslint
+        - esbenp.prettier-vscode
 
     - name: "Create a default asdf configuration"
       template:
