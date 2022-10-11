@@ -9,21 +9,22 @@
       ansible.builtin.lineinfile:
         path: /etc/paths
         state: present
-        line: '/opt/homebrew/bin'
+        line: "/opt/homebrew/bin"
       become: true
       become_user: root
 
-    - name: 'add custom homebrew repos'
+    - name: "add custom homebrew repos"
       community.general.homebrew_tap:
-        name: [
-          adoptopenjdk/openjdk,
-          fishtown-analytics/dbt,
-          heroku/brew,
-          homebrew/cask-versions,
-          thoughtbot/formulae,
-          weaveworks/tap,
-          mongodb/brew
-        ]
+        name:
+          [
+            adoptopenjdk/openjdk,
+            fishtown-analytics/dbt,
+            heroku/brew,
+            homebrew/cask-versions,
+            thoughtbot/formulae,
+            weaveworks/tap,
+            mongodb/brew,
+          ]
 
     - name: Install core packages via brew casks
       community.general.homebrew_cask:
@@ -38,42 +39,44 @@
         - ngrok
         - visual-studio-code
         - iina
+        - raycast
 
     - name: "Install homebrew packages"
       community.general.homebrew:
-        name: [
-          'autoconf',
-          'automake',
-          'bfg',
-          'coreutils',
-          'curl',
-          'direnv',
-          'dnsmasq',
-          'gnu-time',
-          'gpg',
-          'htop',
-          'libtool',
-          'libxslt',
-          'libyaml',
-          'mas',
-          'openssl' ,
-          'pkg-config',
-          'postgresql',
-          'rcm',
-          'readline',
-          'redis',
-          'sqlite3',
-          'unzip',
-          'vim',
-          'watchman',
-          'xz',
-          'yarn',
-          'zlib',
-          'zsh',
-          'mongodb-community',
-          'mysql',
-          'asdf'
-        ]
+        name:
+          [
+            "autoconf",
+            "automake",
+            "bfg",
+            "coreutils",
+            "curl",
+            "direnv",
+            "dnsmasq",
+            "gnu-time",
+            "gpg",
+            "htop",
+            "libtool",
+            "libxslt",
+            "libyaml",
+            "mas",
+            "openssl",
+            "pkg-config",
+            "postgresql",
+            "rcm",
+            "readline",
+            "redis",
+            "sqlite3",
+            "unzip",
+            "vim",
+            "watchman",
+            "xz",
+            "yarn",
+            "zlib",
+            "zsh",
+            "mongodb-community",
+            "mysql",
+            "asdf",
+          ]
         state: present
         update_homebrew: yes
 
@@ -181,8 +184,6 @@
     #     - apollo
     #     - generator-generator
     #     - yo
-        
+
     - name: re-generate bins now we've installed some yarn packages
       shell: asdf reshim nodejs
-        
-
