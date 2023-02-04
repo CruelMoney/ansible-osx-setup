@@ -19,11 +19,11 @@
           [
             adoptopenjdk/openjdk,
             fishtown-analytics/dbt,
-            heroku/brew,
             homebrew/cask-versions,
             thoughtbot/formulae,
             weaveworks/tap,
             mongodb/brew,
+            homebrew/cask-driver,
           ]
 
     - name: Install core packages via brew casks
@@ -35,11 +35,18 @@
         - figma
         - google-chrome
         - firefox
-        - hyper
         - ngrok
         - visual-studio-code
         - iina
         - raycast
+        - nordvpn
+        - notion
+        - sqlpro-studio
+        - slack
+        - telegram
+        - cleanshot
+        - daisydisk
+        - mongodb-compass
 
     - name: "Install homebrew packages"
       community.general.homebrew:
@@ -113,9 +120,9 @@
         dest: /Users/{{ lookup('env', 'USER') }}/.zshrc
         owner: "{{ lookup('env', 'USER') }}"
         force: yes
-    
+
     # - name: "Add ZSH plugins"
-    #   shell: | 
+    #   shell: |
     #     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
     #     git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
@@ -124,24 +131,6 @@
         git config --global user.name "Christopher Dengsø"
         git config --global user.email "chrdengso@gmail.com"
         git config --global init.defaultBranch main
-
-    - name: Create a default VSCode configuration
-      template:
-        src: templates/vscode-settings.json.j2
-        dest: /Users/{{ lookup('env', 'USER') }}/Library/Application Support/Code/User/settings.json
-        owner: "{{ lookup('env', 'USER') }}"
-        force: yes
-
-    # Add something which ensures path is set here
-    - name: Install VSCode extensions
-      shell: code --install-extension {{ item }}
-      with_items:
-        - bradlc.vscode-tailwindcss
-        - mhutchie.git-graph
-        - eamodio.gitlens
-        - github.copilot
-        - dbaeumer.vscode-eslint
-        - esbenp.prettier-vscode
 
     - name: "Create a default asdf configuration"
       template:
@@ -157,18 +146,9 @@
       with_items:
         - ruby
         - nodejs
-        - python
-
-    - name: "Install Default Python"
-      shell: |
-        source ~/.zshrc
-        asdf install python 3.10.0
-        asdf global python 3.10.0
-        pip3 install ansible
-        asdf reshim python
 
     - name: "Install Default Ruby"
-      tags: 
+      tags:
         - ruby
       shell: |
         source ~/.zshrc
@@ -193,5 +173,5 @@
     #     - generator-generator
     #     - yo
 
-    - name: re-generate bins now we've installed some yarn packages
-      shell: asdf reshim nodejs
+    # - name: re-generate bins now we've installed some yarn packages
+    #   shell: asdf reshim nodejs

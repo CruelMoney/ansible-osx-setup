@@ -3,6 +3,7 @@
 
 # Setup some standard paths
 export ANDROID_HOME=~/Library/Android/sdk
+export ANDROID_SDK_ROOT=~/Library/Android/sdk
 export PATH=${PATH}:${ANDROID_HOME}/tools
 export PATH=${PATH}:${ANDROID_HOME}/platform-tools
 export PATH=/usr/local/opt/imagemagick@6/bin:${PATH}
@@ -32,3 +33,10 @@ source $ZSH/oh-my-zsh.sh
 # Load personal ZSH config which should be stored in ~/.zshrc.personal.after
 # Most ZSH config e.g. aliases etc goes here
 if [ -f ~/.zshrc.personal.after ]; then . ~/.zshrc.personal.after; fi
+
+# Load asdf
+. $HOME/.asdf/asdf.sh
+export PATH="/usr/local/sbin:$PATH"
+
+
+export PATH="/usr/local/opt/python/libexec/bin:$PATH"
