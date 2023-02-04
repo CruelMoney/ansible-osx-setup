@@ -1,0 +1,176 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Install homebrew
+      include_role:
+        name: geerlingguy.mac.homebrew
+
+    - name: Make sure homebrew bin is in path
+      ansible.builtin.lineinfile:
+        path: /etc/paths
+        state: present
+        line: "/opt/homebrew/bin"
+      become: true
+      become_user: root
+
+    - name: "add custom homebrew repos"
+      community.general.homebrew_tap:
+        name: [
+            adoptopenjdk/openjdk,
+            fishtown-analytics/dbt,
+            homebrew/cask-versions,
+            thoughtbot/formulae,
+            weaveworks/tap,
+            mongodb/brew,
+            #homebrew/cask-driver,
+          ]
+
+    - name: Install core packages via brew casks
+      community.general.homebrew_cask:
+        name: "{{ item }}"
+      ignore_errors: yes
+      with_items:
+        - docker
+        - figma
+        - google-chrome
+        - firefox
+        - ngrok
+        - visual-studio-code
+        - iina
+        - raycast
+        - nordvpn
+        - notion
+        - sqlpro-studio
+        - slack
+        - telegram
+        - cleanshot
+        - daisydisk
+        - mongodb-compass
+
+    - name: "Install homebrew packages"
+      community.general.homebrew:
+        name:
+          [
+            "autoconf",
+            "automake",
+            "bfg",
+            "coreutils",
+            "curl",
+            "direnv",
+            "dnsmasq",
+            "gnu-time",
+            "gpg",
+            "htop",
+            "libtool",
+            "libxslt",
+            "libyaml",
+            "mas",
+            "openssl",
+            "pkg-config",
+            "postgresql",
+            "rcm",
+            "readline",
+            "redis",
+            "sqlite3",
+            "unzip",
+            "vim",
+            "watchman",
+            "xz",
+            "yarn",
+            "zlib",
+            "zsh",
+            "mongodb-community",
+            "mysql",
+            "asdf",
+          ]
+        state: present
+        update_homebrew: yes
+
+    - name: "Install from Mac app store"
+      shell: mas install {{ item }}
+      with_items:
+        - 497799835 # xcode
+        - 1278508951 # trello
+        - 1176895641 # spark
+
+    - name: Get the path to ZSH
+      become: false
+      local_action: command which zsh
+      register: zsh_path
+
+    - name: "Ensure homebrew zsh is in allowed shells"
+      lineinfile:
+        path: /etc/shells
+        line: "{{ zsh_path.stdout }}"
+      become: true
+
+    - name: Install Oh My ZSH
+      shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+      args:
+        creates: "/Users/{{ lookup('env', 'USER') }}/.oh-my-zsh"
+
+    - name: Set ZSH as the default shell
+      shell: chsh -s $(which zsh) {{ lookup('env', 'USER') }}
+      become: true
+
+    - name: "Create a default ZSH configuration"
+      template:
+        src: templates/.zshrc.j2
+        dest: /Users/{{ lookup('env', 'USER') }}/.zshrc
+        owner: "{{ lookup('env', 'USER') }}"
+        force: yes
+
+    - name: "Add ZSH plugins"
+      shell: |
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+        git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+    - name: Setup git
+      shell: |
+        git config --global user.name "Christopher Dengsø"
+        git config --global user.email "chrdengso@gmail.com"
+        git config --global init.defaultBranch main
+
+    - name: "Create a default asdf configuration"
+      template:
+        src: templates/.asdfrc.j2
+        dest: /Users/{{ lookup('env', 'USER') }}/.asdfrc
+        owner: "{{ lookup('env', 'USER') }}"
+        force: yes
+
+    # - name: "Install asdf plugins"
+    #   shell: |
+    #     source ~/.zshrc
+    #     asdf plugin-add {{ item }} || exit 0
+    #   with_items:
+    #     - ruby
+    #     - nodejs
+
+    # - name: "Install Default Ruby"
+    #   tags:
+    #     - ruby
+    #   shell: |
+    #     source ~/.zshrc
+    #     asdf install ruby latest
+    #     asdf global ruby latest
+    #     gem install bundler
+    #     gem install cocoapods
+
+    - name: "Install default node"
+      shell: |
+        source ~/.zshrc
+        bash /Users/{{ lookup('env', 'USER') }}/.asdf/plugins/nodejs/bin/import-release-team-keyring
+        asdf install nodejs latest
+        asdf global nodejs latest
+
+    # - name: Install yarn packages
+    #   shell: yarn global add {{ item }}
+    #   with_items:
+    #     - react-native-cli
+    #     - create-react-app
+    #     - apollo
+    #     - generator-generator
+    #     - yo
+
+    # - name: re-generate bins now we've installed some yarn packages
+    #   shell: asdf reshim nodejs
